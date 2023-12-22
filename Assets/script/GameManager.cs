@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
     card card1;
     public bool isCheck = false;
     public delegate IEnumerator OpenDelegate();
+
+    public AudioClip match;
+    public AudioSource audioSource;
+
     private void Awake()
     {
         I = this;
@@ -52,7 +56,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (time > 30f)
+        if (time > 3f)
             GameOver();
         if (count > 7)
             StartCoroutine(GameSuccess());
@@ -89,6 +93,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                audioSource.PlayOneShot(match);
                 StartCoroutine(card1.successCard());
                 StartCoroutine(success());
                 count++;
@@ -107,6 +112,10 @@ public class GameManager : MonoBehaviour
     {
         gameOver.SetActive(true);
         Time.timeScale = 0;
+    }
+    public void ReGame()
+    {
+        adsManager.I.ShowRewardAd();
     }
 
     public void retryGame()

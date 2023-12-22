@@ -9,6 +9,9 @@ public class card : MonoBehaviour
     public string cardName = "";
     Button btn;
 
+    public AudioClip flip;
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,7 @@ public class card : MonoBehaviour
     }
     public void OpenCard()
     {
+        audioSource.PlayOneShot(flip);
         anim.SetBool("isOpen", true);
         transform.Find("front").gameObject.SetActive(true);
         transform.Find("back").gameObject.SetActive(false);
