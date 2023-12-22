@@ -43,8 +43,10 @@ public class GameManager : MonoBehaviour
 
             string rtanName = "rtan" + rtans[i].ToString();
             newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(rtanName);
-            newCard.GetComponent<card>().cardName = rtanName;
+            card1 = newCard.GetComponent<card>();
+            card1.cardName = rtanName;
         }
+        card1 = null;
     }
 
     // Update is called once per frame
