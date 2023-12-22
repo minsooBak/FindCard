@@ -66,14 +66,6 @@ public class GameManager : MonoBehaviour
         timeTxt.text = time.ToString("N2");
     }
 
-    public IEnumerator CardStart()
-    {
-        yield return new WaitForSecondsRealtime(4f);
-
-
-        yield break;
-    }
-
     public void CardOpen(card _card, OpenDelegate close, OpenDelegate success)
     {
         if(!isOpen)
