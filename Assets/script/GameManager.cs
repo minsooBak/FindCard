@@ -19,14 +19,11 @@ public class GameManager : MonoBehaviour
     string cardName = "";
     card card1;
     public bool isCheck = false;
-    public bool isRun = true;
     public delegate IEnumerator OpenDelegate();
-    card[] cards;
     private void Awake()
     {
         I = this;
         Time.timeScale = 1;
-        cards = new card[16];
     }
 
     // Start is called before the first frame update
@@ -46,10 +43,7 @@ public class GameManager : MonoBehaviour
 
             string rtanName = "rtan" + rtans[i].ToString();
             newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(rtanName);
-            card1 = newCard.GetComponent<card>();
-            card1.cardName = rtanName;
-            cards[i] = card1;
-            card1 = null;
+            newCard.GetComponent<card>().cardName = rtanName;
         }
     }
 
@@ -59,13 +53,19 @@ public class GameManager : MonoBehaviour
         if (time > 30f)
             GameOver();
         if (count > 7)
-        {
             StartCoroutine(GameSuccess());
-        }
         else
             time += Time.deltaTime;
 
         timeTxt.text = time.ToString("N2");
+    }
+
+    public IEnumerator CardStart()
+    {
+        yield return new WaitForSecondsRealtime(4f);
+
+
+        yield break;
     }
 
     public void CardOpen(card _card, OpenDelegate close, OpenDelegate success)
