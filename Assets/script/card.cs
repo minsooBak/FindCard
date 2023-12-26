@@ -11,11 +11,14 @@ public class card : MonoBehaviour
 
     public AudioClip flip;
     public AudioSource audioSource;
-
+    public SpriteRenderer cardBack;
     // Start is called before the first frame update
     void Start()
     {
         btn = GetComponent<Button>();
+        cardBack = transform.Find("back").GetComponent<SpriteRenderer>();
+        cardBack.color = new Color(255 / 255, 255 / 255, 255 / 255);
+
     }
 
     // Update is called once per frame
@@ -32,8 +35,6 @@ public class card : MonoBehaviour
     {
         audioSource.PlayOneShot(flip);
         anim.SetBool("isOpen", true);
-        transform.Find("front").gameObject.SetActive(true);
-        transform.Find("back").gameObject.SetActive(false);
         GameManager.I.CardOpen(this, CloseCard, successCard);
     }
 
@@ -41,9 +42,9 @@ public class card : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(2f);
         anim.SetBool("isOpen", false);
-        transform.Find("front").gameObject.SetActive(false);
-        transform.Find("back").gameObject.SetActive(true);
+        cardBack.color = new Color(211 / 255f, 211 / 255f, 211 / 255f);
         GameManager.I.isCheck = false;
+        GameManager.I.MatchTxtOff();
         yield break;
     }
 
@@ -51,7 +52,22 @@ public class card : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(1f);
         anim.SetBool("isSuccess", true);
+        GameManager.I.MatchTxtOff();
         Destroy(this,1.5f);
         yield break;
+    }
+
+    public void CardCheck()
+    {
+        if(anim.GetBool("isOpen"))
+        {
+            cardBack.sortingOrder = 1;
+            
+        }
+        else
+        {
+            cardBack.sortingOrder = 3;
+            
+        }
     }
 }

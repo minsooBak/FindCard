@@ -5,24 +5,28 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager I;
 
     public Text timeTxt;
     public GameObject gameOver;
+    public GameObject countObj;
+    public GameObject failTxtObj;
+    Text failTxt = null;
     public GameObject card;
     
     float time = 0.0f;
+    float maxTime = 60f;
     bool isOpen = false;
     int count = 0;
+    int tryCount = 0;
     string cardName = "";
     card card1;
     public bool isCheck = false;
     public delegate IEnumerator OpenDelegate();
-
-    public AudioClip match;
-    public AudioSource audioSource;
+    public AudioManager AM;
 
     private void Awake()
     {
@@ -33,9 +37,21 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int[] rtans = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 };
+        failTxt = failTxtObj.GetComponent<Text>();
+        time = maxTime;
 
+        int[] rtan1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+        int[] rtans = new int[(rtan1.Length - 1) * 2];
+        
+        rtan1 = rtan1.OrderBy(item => Random.Range(-1f, 1f)).ToArray();
+
+        for(int i = 0; i < rtan1.Length - 1; i++)
+        {
+            rtans[i] = rtan1[i];
+            rtans[i + 8] = rtan1[i];
+        }
         rtans = rtans.OrderBy(item => Random.Range(-1f, 1f)).ToArray();
+
         for (int i = 0; i < 16; i++)
         {
             GameObject newCard = Instantiate(card);
@@ -56,12 +72,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (time > 3f)
+        if (time < 0f)
             GameOver();
+        else if (time < (maxTime / 4))
+        {
+            timeTxt.color = new Color(255 / 255, 0, 0);
+        }
         if (count > 7)
             StartCoroutine(GameSuccess());
         else
-            time += Time.deltaTime;
+            time -= Time.deltaTime;
 
         timeTxt.text = time.ToString("N2");
     }
@@ -77,15 +97,25 @@ public class GameManager : MonoBehaviour
         else
         {
             isOpen = false;
+            tryCount++;
             if (cardName != _card.cardName)
             {
+                failTxtObj.SetActive(true);
+                failTxt.text = "½ÇÆÐ!";
                 isCheck = true;
+                time -= 5f;
+                if (time > 0)
+                    AM.MatchFail();
+                else
+                    time = 0f;
                 StartCoroutine(card1.CloseCard());
                 StartCoroutine(close());
             }
             else
             {
-                audioSource.PlayOneShot(match);
+                failTxtObj.SetActive(true);
+                AM.Match();
+                failTxt.text = "ÆÀ¿ø : " + cardName + "¸ÅÄª ¼º°ø";
                 StartCoroutine(card1.successCard());
                 StartCoroutine(success());
                 count++;
@@ -102,9 +132,19 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
+        isCheck = true;
+        countObj.GetComponent<Text>().text = "¸ÅÄª È½¼ö : " + tryCount.ToString();
+        countObj.SetActive(true);
         gameOver.SetActive(true);
-        Time.timeScale = 0;
+        AM.GameOver();
+        Time.timeScale = 0f;
     }
+
+    public void MatchTxtOff()
+    {
+        failTxtObj.SetActive(false);
+    }
+
     public void ReGame()
     {
         adsManager.I.ShowRewardAd();
