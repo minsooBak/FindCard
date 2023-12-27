@@ -7,7 +7,6 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
     [SerializeField] Button _showAdButton;
     [SerializeField] string _androidAdUnitId;
     [SerializeField] string _iOSAdUnitId;
-    public AudioSource source;
     string _adUnitId = null; // 지원되지 않는 플랫폼의 경우 값은 null로 남아 있습니다.
 
     void Awake()
@@ -55,7 +54,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
     // 유저가 버튼을 클릭할 때 실행할 메서드를 구현합니다.
     public void ShowAd()
     {
-        source.Pause();
+        AudioManager.instance.StopBGM();
         // 버튼을 비활성화합니다.
         _showAdButton.interactable = false;
         // 그런 다음 광고를 표시합니다.

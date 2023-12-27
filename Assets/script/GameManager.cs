@@ -27,18 +27,24 @@ public class GameManager : MonoBehaviour
     string cardName = "";
     card card1;
     public bool isCheck = false;
+    public bool isRun = true;
     public delegate IEnumerator OpenDelegate();
-    public AudioManager AM;
 
     private void Awake()
     {
-        I = this;
+        if (I == null)
+            I = this;
+        else
+            Destroy(this);
+
         Time.timeScale = 1;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        AudioManager.instance.PlayBGM("BGM");
+
         failTxt = failTxtObj.GetComponent<Text>();
 
         int[] rtan1 = null;
@@ -134,7 +140,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (time < 0f)
+        if (time < 0f && isRun)
             GameOver();
         else if (time < (maxTime / 4))
         {
@@ -186,7 +192,7 @@ public class GameManager : MonoBehaviour
                 isCheck = true;
                 time -= 5f;
                 if (time > 0)
-                    AM.MatchFail();
+                    AudioManager.instance.PlaySFX("fail");
                 else
                     time = 0f;
                 StartCoroutine(card1.CloseCard());
@@ -195,7 +201,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 failTxtObj.SetActive(true);
-                AM.Match();
+                AudioManager.instance.PlaySFX("match");
                 failTxt.text = "ÆÀ¿ø : " + cardName + "¸ÅÄª ¼º°ø";
                 StartCoroutine(card1.successCard());
                 StartCoroutine(success());
@@ -219,6 +225,7 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
+        isRun = false;
         isCheck = true;
         int score = ((int)time * 15) + (count * 10) - (count * 5);
         if (score < 0)
@@ -226,7 +233,7 @@ public class GameManager : MonoBehaviour
         countObj.GetComponent<Text>().text = "¸ÅÄª È½¼ö : " + tryCount.ToString() + "\nÁ¡¼ö : " + score.ToString();
         countObj.SetActive(true);
         gameOver.SetActive(true);
-        AM.GameOver();
+        AudioManager.instance.PlaySFX("gameOver");
         Time.timeScale = 0f;
     }
 

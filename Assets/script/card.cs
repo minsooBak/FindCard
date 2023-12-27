@@ -10,7 +10,6 @@ public class card : MonoBehaviour
     Button btn;
 
     public AudioClip flip;
-    public AudioSource audioSource;
     SpriteRenderer cardBack;
     Canvas canvas;
     // Start is called before the first frame update
@@ -34,7 +33,7 @@ public class card : MonoBehaviour
     }
     public void OpenCard()
     {
-        audioSource.PlayOneShot(flip);
+        AudioManager.instance.PlaySFX("filp");
         anim.SetBool("isOpen", true);
         GameManager.I.CardOpen(this, CloseCard, successCard);
     }
