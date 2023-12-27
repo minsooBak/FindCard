@@ -206,6 +206,11 @@ public class GameManager : MonoBehaviour
     public IEnumerator GameSuccess()
     {
         yield return new WaitForSecondsRealtime(2f);
+        int score = ((int)time * 15) + (count * 10) - (count * 5);
+        if (score < 0)
+            score = 0;
+        countObj.GetComponent<Text>().text = "¸ÅÄª È½¼ö : " + tryCount.ToString() + "\nÁ¡¼ö : " + score.ToString();
+        countObj.SetActive(true);
         gameOver.SetActive(true);
         PlayerPrefs.SetInt("Stage1Clear", 1);
         Time.timeScale = 0;
@@ -230,10 +235,6 @@ public class GameManager : MonoBehaviour
         failTxtObj.SetActive(false);
     }
 
-    public void ReGame()
-    {
-        adsManager.I.ShowRewardAd();
-    }
 
     public void retryGame()
     {
