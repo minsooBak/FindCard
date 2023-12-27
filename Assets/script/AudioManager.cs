@@ -65,7 +65,6 @@ public class AudioManager : MonoBehaviour
                     {
                         sfxPlayer[j].clip = sfx[i].clip;
                         sfxPlayer[j].Play();
-                        Debug.Log(p_sfxName + "Àç»ý");
                         return;
                     }
                 }

@@ -218,7 +218,11 @@ public class GameManager : MonoBehaviour
         countObj.GetComponent<Text>().text = "¸ÅÄª È½¼ö : " + tryCount.ToString() + "\nÁ¡¼ö : " + score.ToString();
         countObj.SetActive(true);
         gameOver.SetActive(true);
-        PlayerPrefs.SetInt("Stage1Clear", 1);
+        if (PlayerPrefs.HasKey("Stage1Clear") && stage == 2)
+            PlayerPrefs.DeleteKey("Stage1Claer");
+        else
+            PlayerPrefs.SetInt("Stage1Clear", 1);
+
         Time.timeScale = 0;
         yield break;
     }
