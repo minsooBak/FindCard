@@ -11,14 +11,15 @@ public class card : MonoBehaviour
 
     public AudioClip flip;
     public AudioSource audioSource;
-    public SpriteRenderer cardBack;
+    SpriteRenderer cardBack;
+    Canvas canvas;
     // Start is called before the first frame update
     void Start()
     {
         btn = GetComponent<Button>();
         cardBack = transform.Find("back").GetComponent<SpriteRenderer>();
         cardBack.color = new Color(255 / 255, 255 / 255, 255 / 255);
-
+        canvas = transform.Find("back").transform.Find("Canvas").GetComponent<Canvas>();
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class card : MonoBehaviour
 
     public IEnumerator CloseCard()
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(1f);
         anim.SetBool("isOpen", false);
         cardBack.color = new Color(211 / 255f, 211 / 255f, 211 / 255f);
         GameManager.I.isCheck = false;
@@ -53,7 +54,7 @@ public class card : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
         anim.SetBool("isSuccess", true);
         GameManager.I.MatchTxtOff();
-        Destroy(this,1.5f);
+        Destroy(gameObject ,1.5f);
         yield break;
     }
 
@@ -62,12 +63,12 @@ public class card : MonoBehaviour
         if(anim.GetBool("isOpen"))
         {
             cardBack.sortingOrder = 1;
-            
+            canvas.sortingOrder = 1;
         }
         else
         {
             cardBack.sortingOrder = 3;
-            
+            canvas.sortingOrder = 4;
         }
     }
 }
